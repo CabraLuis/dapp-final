@@ -88,3 +88,22 @@ export async function createAuction(tokenId, startingBid, duration) {
     throw error;
   }
 }
+
+// Función para realizar una oferta en una subasta
+export async function placeBid(tokenId, bidAmount) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/auction/bid`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ tokenId, bidAmount }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Error realizando puja");
+    return data.txHash;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

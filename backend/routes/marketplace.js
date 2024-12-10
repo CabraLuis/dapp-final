@@ -1,5 +1,9 @@
 const express = require("express");
-const { listNFTForSale, buyNFT } = require("../controllers/marketplace");
+const {
+  listNFTForSale,
+  buyNFT,
+  getSalePrice,
+} = require("../controllers/marketplace");
 
 const router = express.Router();
 
@@ -20,6 +24,16 @@ router.post("/buy", async (req, res) => {
   try {
     const txHash = await buyNFT(tokenId, price);
     res.json({ success: true, txHash });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.get("/price/:tokenId", async (req, res) => {
+  const { tokenId } = req.params;
+  try {
+    const price = await getSalePrice(tokenId);
+    res.json({ success: true, price: price.toString() }); // Devolver el precio como string para evitar problemas con números grandes
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

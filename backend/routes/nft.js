@@ -1,5 +1,5 @@
 const express = require("express");
-const { mintNFT, getAllMintedNFTs } = require("../controllers/nft");
+const { mintNFT, getAllMintedNFTs, isOwner } = require("../controllers/nft");
 
 const router = express.Router();
 
@@ -23,5 +23,7 @@ router.get("/all", async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
+router.get("/is-owner", isOwner);
 
 module.exports = router;

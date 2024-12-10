@@ -53,7 +53,29 @@ async function getAllMintedNFTs() {
   }
 }
 
+// Verificar si una dirección es propietaria de un NFT
+async function isOwner(req, res) {
+  const { tokenId, account } = req.query;
+
+  try {
+    if (!tokenId || !account) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Missing tokenId or account" });
+    }
+
+    const owner = await nftContract.ownerOf(tokenId);
+    const isOwner = owner.toLowerCase() === account.toLowerCase();
+
+    res.json({ success: true, isOwner });
+  } catch (error) {
+    console.error("Error checking ownership:", error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+}
+
 module.exports = {
   mintNFT,
   getAllMintedNFTs,
+  isOwner,
 };
